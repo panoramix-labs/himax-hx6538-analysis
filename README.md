@@ -1,5 +1,10 @@
 # Himax HX6538 Analysis
 
+**DISCLAIMER:** all of this information was obtained from public
+source, or guessed by looking at public source, and all information
+disclosed here is already publicated on one of the sources listed
+through this document.
+
 This repository aims to study the HX5638 chip from Himax, also known as WiseEye2.
 
 The repository that seems the most up to date and used is in this study is:
@@ -25,6 +30,16 @@ Resources from Himax:
 
 ## Organization of the SDK
 
+According to
+[this source](https://github.com/LynnL4/firmware-seeed-grove-vision-ai/tree/main/Synopsys_PA8535_EM9D_DFSS_SDK_3.3),
+the Himax SDK is based on the Synopsys DesignWareCore suite: a modified
+[Synopsys EM9D](https://www.synopsys.com/dw/ipdir.php?ds=smart-data-fusion-subsystem)
+SoC o include an ARM core instead of a
+[Synposys ARC EM9D](https://www.synopsys.com/dw/ipdir.php?ds=arc-em9d-em11d) core.
+
+This means that while some details could differ, the peripherals working is essentialy the same as the ARC peripherals.
+Some elements of this SDK are published as open-source [here](https://github.com/foss-for-synopsys-dwc-arc-processors/embarc_osp).
+
 The SDK top level directory is `EPII_CM55M_APP_S`.
 
 On some other SDKs, there is also a `EPII_CM55M_APP_M` directory for
@@ -40,6 +55,7 @@ running on the other core.
 - **HW5X5** means Hardware pixel conversion engine with 5x5 window.
 - **JPEG** means hardware-based JPEG encoder.
 - **JPEGENC** means software-based JPEG encoder.
+- **DW** Means DesignWare, the robust peripheral library of Synopsys
 
 
 ## Organization of the DataPath
