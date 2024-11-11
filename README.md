@@ -55,21 +55,19 @@ brings them to the new.
 |	- size 3280x2464 format BGR8U3C
 |
 *	[INP]
-|\	- size 3280x2464 format BGR8U3C
+|\	> size 3280x2464 format BGR8U3C
 | \	- crop	
 | |\	- size 3200x2400 format BGR8U3C
-| | |	- binning
-| | |	- subsample
-| | |	- size 640x480 format BGR8U3C
+| | |	- binning + subsample
+| | |	< size 640x480 format BGR8U3C
 | | |
 | | *	[HW2X2]
 | | |	> size 640x480 format BGR8U3C max 640x480
-| | |	- binning
-| | |	- subsample
-| | |	< size 640x480 format RGB
+| | |	- binning + subsample
+| | |	< size 640x480 format RGB24
 | | |
 | | *	[CDM]
-| |	> size 640x480 format RGB max 480x270
+| |	> size 640x480 format RGB24 max 480x270
 | |	- motion detection
 | |
 | *	[hx_lib_image_resize_BGR8U3C_to_RGB24_helium]
@@ -82,28 +80,31 @@ brings them to the new.
 |	- Invoke()
 |
 *	[HW5X5]
-|\	> size 640x480 step 8x4
+|\	> size 640x480 format BGR8U3C step 8x4
 | |	- demosaic
-| |	< size 640x480
+| |	< size 640x480 format RGB24
 | |
 | *	[JPEG]
-|	 size 640x480 max 640x640 mod 16x16
+| |	> size 640x480 format RGB24 max 640x640 mod 16x16
+| |	- encoding
+| |	< size 640x480 format JPEG
+| |
+| *	[SENDPLIB]
+|	> size 640x480 format JPEG
+|	- software
+|	< size 640x480 format JPEG+BASE64+JSON
 |
 *	[WDMA3]
-	 size 640x480
-	 format rgb
+	> size 640x480 format RGB24
+	- format RGB24
+
+# Not sure where these elements are located in the chain
 
 ?
 *	[WDMA1]
-?	 size 381 kBytes
+?	> size 381 kBytes
 
 ?
 *	[WDMA2]
-?	 size 640x480
-
-?
-*	[SENDPLIB]
-?	 format jpeg
-	 software
-	 format base64+jpeg
+?	> size 640x480
 ```
