@@ -64,11 +64,11 @@ The "DataPath" is a collection of cores and a control system for it.
 
 It is the name of the interconnection *between* the image processing
 cores, that is responsible for the connection between the cores and
-brings them to the new.
+brings them to the memory for application processing.
 
 ```
 *	[IMX219]
-|	- size 3280x2464 format BGR8U3C
+|	< size 3280x2464 format BGR8U3C
 |
 *	[INP]
 |\	> size 3280x2464 format BGR8U3C
@@ -105,22 +105,25 @@ brings them to the new.
 | |	- encoding
 | |	< size 640x480 format JPEG
 | |
+| *	[WDMA3]
+| |	> size 640x480 format JPEG
+| |
 | *	[SENDPLIB]
 |	> size 640x480 format JPEG
 |	- software
 |	< size 640x480 format JPEG+BASE64+JSON
 |
-*	[WDMA3]
-	> size 640x480 format RGB24
-	- format RGB24
-
-# Not sure where these elements are located in the chain
-
-?
-*	[WDMA1]
-?	> size 381 kBytes
-
-?
 *	[WDMA2]
-?	> size 640x480
+	> size 640x480 format RGB24
+
+*	[WDMA1]
+	> size 381 kBytes
+
+*	[XDMA]
+
+*	[RDMA1]
 ```
+
+I am realy not sure of the location of the WDMA/RDMA/XDMA in the
+chain. These seems like what interconnect nodes through the pipeline
+rather than being "blocks" on their own.
