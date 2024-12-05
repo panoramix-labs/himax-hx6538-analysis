@@ -50,12 +50,17 @@ running on the other core.
 ## Glossary
 
 - **EPII** means more or less WiseEye2.
-- **DP** Means DataPath (see below).
+- **DP** means datapath (see below).
 - **HW2X2** means Hardware pixel conversion engine with 2x2 window.
 - **HW5X5** means Hardware pixel conversion engine with 5x5 window.
 - **JPEG** means hardware-based JPEG encoder.
 - **JPEGENC** means software-based JPEG encoder.
-- **DW** Means DesignWare, the robust peripheral library of Synopsys
+- **DW** means DesignWare, the peripheral library of Synopsys
+- **XDMA**
+- **WDMA1** means write DMA 1: supports 3 channels: `CH1`, `CH2`, `CH3`
+- **WDMA2** means write DMA 2
+- **WDMA3** means write DMA 3: supports 3 channels: `CH1`, `CH2`, `CH3`
+- **RDMA1** means read DMA 1
 
 
 ## Organization of the DataPath
@@ -66,64 +71,6 @@ It is the name of the interconnection *between* the image processing
 cores, that is responsible for the connection between the cores and
 brings them to the memory for application processing.
 
-```
-*	[IMX219]
-|	< size 3280x2464 format BGR8U3C
-|
-*	[INP]
-|\	> size 3280x2464 format BGR8U3C
-| \	- crop	
-| |\	- size 3200x2400 format BGR8U3C
-| | |	- binning + subsample
-| | |	< size 640x480 format BGR8U3C
-| | |
-| | *	[HW2X2]
-| | |	> size 640x480 format BGR8U3C max 640x480
-| | |	- binning + subsample
-| | |	< size 640x480 format RGB24
-| | |
-| | *	[CDM]
-| |	> size 640x480 format RGB24 max 480x270
-| |	- motion detection
-| |
-| *	[hx_lib_image_resize_BGR8U3C_to_RGB24_helium]
-| |	> size 640x480 format BGR8U3C
-| |	- software
-| |	< size 640x480 format RGB24
-| |	
-| *	[TensorFlowLiteMicro]	
-|	> size 640x480 format RGB24
-|	- Invoke()
-|
-*	[HW5X5]
-|\	> size 640x480 format BGR8U3C step 8x4
-| |	- demosaic
-| |	< size 640x480 format RGB24
-| |
-| *	[JPEG]
-| |	> size 640x480 format RGB24 max 640x640 mod 16x16
-| |	- encoding
-| |	< size 640x480 format JPEG
-| |
-| *	[WDMA3]
-| |	> size 640x480 format JPEG
-| |
-| *	[SENDPLIB]
-|	> size 640x480 format JPEG
-|	- software
-|	< size 640x480 format JPEG+BASE64+JSON
-|
-*	[WDMA2]
-	> size 640x480 format RGB24
+From infromation collected on the headers, it was possible to decipher this graph:
 
-*	[WDMA1]
-	> size 381 kBytes
-
-*	[XDMA]
-
-*	[RDMA1]
-```
-
-I am realy not sure of the location of the WDMA/RDMA/XDMA in the
-chain. These seems like what interconnect nodes through the pipeline
-rather than being "blocks" on their own.
+![](datapath.png)
