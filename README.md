@@ -56,7 +56,7 @@ running on the other core.
 - **JPEG** means hardware-based JPEG encoder.
 - **JPEGENC** means software-based JPEG encoder.
 - **DW** means DesignWare, the peripheral library of Synopsys
-- **XDMA**
+- **XDMA** is the engine that performs read or write DMA operations
 - **WDMA1** means write DMA 1: supports 3 channels: `CH1`, `CH2`, `CH3`
 - **WDMA2** means write DMA 2
 - **WDMA3** means write DMA 3: supports 3 channels: `CH1`, `CH2`, `CH3`
@@ -74,3 +74,28 @@ brings them to the memory for application processing.
 From infromation collected on the headers, it was possible to decipher this graph:
 
 ![](datapath.png)
+
+### INP
+
+MIPI or DVP input. It performs a conversion from MIPI to parallel
+port internally, and processthe data from the parallel port using this
+internal pipeline:
+
+- Cropping from the input resolution to the target resolution
+- Binning: averaging multiple pixels into one to reduce the resolution
+  while taking advantage of the averaging to improve quality.
+- Subsampling: dropping pixels to only keep fewer
+
+The cropping output is passed to binning, further passed to subsampling,
+further passed to the next core, i.e. HW5x5 or HW2x2.
+
+By experience, cropping can be done for an arbitrary value with a single
+pixel granularity, but binning and subsampling
+
+Binning and subsampling can only be done by a list of dividers:
+
+- 16to2 (i.e. 3200x2400 => 400x300)
+- 10to2 (i.e. 3200x2400 => 640x480)
+- 8to2 (i.e. 3200x2400 => 800x600)
+- 6to2 (i.e. 3240x2400 => 610x800, which does not work when using HW5x5 flow apparently, maybe a limitation of HW5x5?)
+- 4to2 (i.e. 3200x2400 => 1600x1200, not enough RAM, need to crop more)
